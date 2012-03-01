@@ -10,6 +10,11 @@ fpIsFacebook = false;
 fpIsVkontakte = false;
 
 /**
+ * Indicates if we are currently in the Macmillan Dictionary context.
+ */
+fpIsMacmillan = false;
+
+/**
  * Indicates if we are currently in the Twitter context.
  */
 fpIsVkontakte = false;
@@ -84,9 +89,15 @@ fpVkResolutionMap = {
 
 /**
  * Indicates that the audio elements modification process is running not to allow doing
- * the same stuff more than once.
+ * the same stuff more than once (Vkontakte's audios).
  */
 fpVkAudioLocked = false;
+
+/**
+ * Indicates that the audio elements modification process is running not to allow doing
+ * the same stuff more than once (Macmillan Dictionary's audios).
+ */
+fpMacmillanAudioLocked = false;
 
 /**
  * Base64-encoded icon to show as a button for sending messages.
@@ -163,6 +174,10 @@ switch (document.location.host) {
 	case "twitter.com":
 		twitterInit();
 		break;
+	// 'Macmillan Dictionary'
+	case "www.macmillandictionary.com":
+		macmillanInit();
+		break;
 	// Unrecognized site which is not supported by this extension
 	default:
 		fpIsSiteValid = false;
@@ -177,6 +192,9 @@ if (fpIsSiteValid) {
 			if (fpIsVkontakte) {
 				injectVkontakteVideoLinks();
 				injectVkontakteAudioLinks();
+			}
+			if (fpIsMacmillan) {
+				injectMacmillanAudioLinks();
 			}
 			if (fpLocked) {
 				return;
@@ -566,4 +584,39 @@ function twitterInit() {
 		");
 		document.head.appendChild(injectionScript.get(0));
 	}
+}
+
+/**
+ * Initializes global variables in case of processing the Macmillan Dictionary page.
+ */
+function macmillanInit() {
+	fpIsMacmillan = true;
+}
+
+/**
+ * Injects links to download pronunciation audio from Macmillan Dictionary.
+ */
+function injectMacmillanAudioLinks() {
+	if (fpMacmillanAudioLocked) {
+		return;
+	}
+	fpMacmillanAudioLocked = true;
+	$.each($(".PRONS img").not("[" + fpInjectedAttributeName + "]"), function(indexInArray, valueOfElement) {
+		var pronunciation = $(valueOfElement);
+		var clickHandler = pronunciation.attr("onclick");
+		if (!clickHandler) {
+			return;
+		}
+		var flashPaths = clickHandler.toString().match(".*?playSoundFromFlash.*?'(.*?)'.*'(.*?)'");
+		if (!flashPaths || (flashPaths.length < 3)) {
+			return;
+		}
+		var url = flashPaths[2];
+		var link = $("<a>").attr("href", url);
+		var image = $("<img>").attr("src", "data:image/png;base64," + fpDownloadImage);
+		link.append(image);
+		link.insertAfter(pronunciation);
+		pronunciation.attr(fpInjectedAttributeName, true);
+	});
+	fpMacmillanAudioLocked = false;
 }

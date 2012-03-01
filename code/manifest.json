@@ -1,6 +1,6 @@
 {
 	"name": "Faceplex",
-	"version": "1.0.34",
+	"version": "1.0.35",
 	"description": "Enhanced social networks: send messages (Facebook News Feed, VKontakte Wall, Twitter Home), download Music and Video (VKontakte)",
 	"icons": {
 		"16": "images/fp-16.png",
@@ -15,7 +15,8 @@
 		"matches": [
 			"http://www.facebook.com/*", "https://www.facebook.com/*",
 			"http://vk.com/*", "http://vkontakte.ru/*",
-			"http://twitter.com/*", "https://twitter.com/*"
+			"http://twitter.com/*", "https://twitter.com/*",
+			"http://www.macmillandictionary.com/*"
 		],
 		"js": [
 			"jquery-1.7.1.min.js", "script.js"
