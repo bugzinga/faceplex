@@ -1,7 +1,8 @@
 {
 	"name": "Faceplex",
-	"version": "1.0.35",
-	"description": "Enhanced social networks: send messages (Facebook News Feed, VKontakte Wall, Twitter Home), download Music and Video (VKontakte)",
+	"version": "1.0.38",
+	"description": "__MSG_appDesc__",
+	"default_locale": "en",
 	"icons": {
 		"16": "images/fp-16.png",
 		"48": "images/fp-48.png",
