@@ -630,7 +630,7 @@ function injectMacmillanAudioLinks() {
 		var url = flashPaths[2];
 		var link = $("<a>").attr("href", url);
 		if (url.endsWith(".mp3")) {
-			var word = $(this).closest(".HEAD").find(".redword .BASE");
+			var word = $(this).closest(".HEAD").find("#headword .BASE-FORM .BASE");
 			if (word) {
 				link.attr("download", word.text() + ".mp3");
 			}
