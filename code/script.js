@@ -629,6 +629,12 @@ function injectMacmillanAudioLinks() {
 		}
 		var url = flashPaths[2];
 		var link = $("<a>").attr("href", url);
+		if (url.endsWith(".mp3")) {
+			var word = $(this).closest(".HEAD").find(".redword .BASE");
+			if (word) {
+				link.attr("download", word.text() + ".mp3");
+			}
+		}
 		var image = $("<img>").attr("src", "data:image/png;base64," + fpDownloadImage);
 		link.append(image);
 		link.insertAfter(pronunciation);
