@@ -196,6 +196,10 @@ switch (document.location.host) {
  */
 if (fpIsSiteValid) {
 	$(document).bind("DOMSubtreeModified", function() {
+			if (fpLocked) {
+				return;
+			}
+			fpLocked = true;
 			if (fpIsVkontakte) {
 				injectVkontakteVideoLinks();
 				injectVkontakteAudioLinks();
@@ -203,10 +207,6 @@ if (fpIsSiteValid) {
 			if (fpIsMacmillan) {
 				injectMacmillanAudioLinks();
 			}
-			if (fpLocked) {
-				return;
-			}
-			fpLocked = true;
 			fpInject();
 			fpLocked = false;
 		});
@@ -416,15 +416,17 @@ function vkontakteFindUserId() {
  * Templates are just a logical assumption how it works and matches.
  */
 function injectVkontakteVideoLinks() {
-	$.each($(".video_info_cont a.video_name").not("[" + fpInjectedAttributeName + "]"), function(indexInArray, valueOfElement) {
+	$.each($(".video_info_cont a.video_name, .results.video_results .title a").not("[" + fpInjectedAttributeName + "]"), function(indexInArray, valueOfElement) {
 		var video = $(valueOfElement);
 		var videoUrl = video.attr("href");
 		// we assume that the video ling should look like "/video${videoId}?${params}",
 		// so if it is not just go away from here
-		if (!videoUrl.startsWith("/video")) {
+		if (!videoUrl.startsWith("/video") && !videoUrl.startsWith("video")) {
 			return;
 		}
-		var idStartPosition = 6;
+		var idStartPosition = (videoUrl[0] == "/")
+			? 6
+			: 5;
 		var idEndPosition = videoUrl.indexOf("?", idStartPosition);
 		idEndPosition = (idEndPosition == -1)
 			? videoUrl.length
