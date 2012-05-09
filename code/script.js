@@ -151,10 +151,17 @@ fpDownloadImage = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAALCAYAAACgR9dcAAAAGXRFWHRTb2Z0d
                    OP2822rhuVjE4ONDvg86Hdzn8/hsNATlCmXcTlwVtR1S+1WPFJ+OjqDXangsFNBtNsXEa5p2INbm\
                    0zyOHpts82R6up56KBSWadIrTazQjzMFGP0t/hFgACMj/LBiwjdaAAAAAElFTkSuQmCC";
 /**
- * Adding new method 'startWith' to the 'String' class.
+ * Adding new method 'startsWith' to the 'String' class.
  */                  
 String.prototype.startsWith = function(value) {
 	return (this.indexOf(value) == 0);
+}
+
+/**
+ * Adding new method 'endsWith' to the 'String' class.
+ */                  
+String.prototype.endsWith = function(value) {
+	return (this.substr(-value.length) == value);
 }
 
 /**
@@ -206,7 +213,7 @@ if (fpIsSiteValid) {
 }
 
 /**
- * Injects the extension realted data into the DOM elements of the opened web page.
+ * Injects the extension related data into the DOM elements of the opened web page.
  */
 function fpInject() {
 	var users = $(fpSelector).not("[" + fpInjectedAttributeName + "]");
@@ -529,7 +536,7 @@ function injectVkontakteAudioLinks() {
 		return;
 	}
 	fpVkAudioLocked = true;
-	$.each($(".play_btn input").not("[" + fpInjectedAttributeName + "]"), function(indexInArray, valueOfElement) {
+	$.each($(".play_btn input, .audio input").not("[" + fpInjectedAttributeName + "]"), function(indexInArray, valueOfElement) {
 		var audio = $(valueOfElement);
 		var audioId = audio.attr("id");
 		var audioValue = audio.attr("value");
@@ -540,6 +547,12 @@ function injectVkontakteAudioLinks() {
 		var url = audioValue.substring(0, urlEndPosition);
 		var audioTitle = audio.closest("tr").find(".title_wrap b, .audio_title_wrap b");
 		var link = $("<a>").css("margin", "2px").attr("href", url);
+		if (url.endsWith(".mp3")) {
+			var audioTitleName = audioTitle.siblings(".title").find("a");
+			if (audioTitleName) {
+				link.attr("download", audioTitle.text() + " - " + audioTitleName.text() + ".mp3");
+			}
+		}
 		var image = $("<img>").attr("src", "data:image/png;base64," + fpDownloadImage);
 		link.append(image);
 		link.insertAfter(audioTitle);
