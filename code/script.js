@@ -440,6 +440,9 @@ function injectVkontakteVideoLinks() {
 		// inject download image with a specified link into the page
 		function injectVideoLink(url) {
 			var link = $("<a>").css("margin", "2px").attr("href", url);
+			if (url.endsWith(".mp4") || url.endsWith(".flv")) {
+				link.attr("download", video.text() + url.substr(-4));
+			}
 			var image = $("<img>").attr("src", "data:image/png;base64," + fpDownloadImage);
 			link.append(image);
 			link.insertAfter(video);
