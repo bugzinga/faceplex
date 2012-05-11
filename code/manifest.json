@@ -1,6 +1,6 @@
 {
 	"name": "Faceplex",
-	"version": "1.0.43",
+	"version": "1.0.44",
 	"description": "__MSG_appDesc__",
 	"default_locale": "en",
 	"icons": {
@@ -9,7 +9,7 @@
 		"128": "images/fp-128.png"
 	},
 	"permissions": [
-		"tabs", "http://*/*", "https://*/*"
+		"tabs", "webRequest", "http://*/*", "https://*/*"
 	],
 	"content_scripts": [
 	{
@@ -17,10 +17,17 @@
 			"http://www.facebook.com/*", "https://www.facebook.com/*",
 			"http://vk.com/*", "http://vkontakte.ru/*",
 			"http://twitter.com/*", "https://twitter.com/*",
-			"http://www.macmillandictionary.com/*"
+			"http://www.macmillandictionary.com/*",
+			"http://www.pandora.com/*"
 		],
 		"js": [
 			"jquery-1.7.1.min.js", "script.js"
+		],
+		"css": [
+			"styles.css"
 		]
-	}]
+	}],
+	"background": {
+		"scripts": [ "background.js" ]
+	}
 }

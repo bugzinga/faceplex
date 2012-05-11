@@ -17,7 +17,12 @@ fpIsMacmillan = false;
 /**
  * Indicates if we are currently in the Twitter context.
  */
-fpIsVkontakte = false;
+fpIsTwitter = false;
+
+/**
+ * Indicates if we are currently in the Pandora context.
+ */
+fpIsPandora = false;
 
 /**
  * Indicates that the elements modification process is running not to run them simultaneously.
@@ -69,7 +74,7 @@ fpUserId = null;
 /**
  * Map to store video elements which are being processed.
  */
-fpVkProcessedVideoMap = {};
+fpVkProcessedVideoMap = { };
 
 /**
  * VKontakte default video resolution.
@@ -98,6 +103,29 @@ fpVkAudioLocked = false;
  * the same stuff more than once (Macmillan Dictionary's audios).
  */
 fpMacmillanAudioLocked = false;
+
+/**
+ * Chrome communication port name to communicate with Pandora's tab.
+ */
+fpPandoraPortName = "Faceplex Pandora Port";
+
+/**
+ * Chrome communication port to communicate with Pandora's tab.
+ */
+fpPandoraPort = chrome.extension.connect(
+	{
+		name: fpPandoraPortName
+	});
+
+/**
+ * Injected element name on Pandora web-site.
+ */
+fpPandoraInjectedElementId = "fpPandoraDownloadButton";
+
+/**
+ * Pandora action counter, is used to enable/disable "Download" button.
+ */
+fpPandoraActionCount = 1;
 
 /**
  * Base64-encoded icon to show as a button for sending messages.
@@ -150,6 +178,7 @@ fpDownloadImage = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAALCAYAAACgR9dcAAAAGXRFWHRTb2Z0d
                    CXrRtTVMRyIIhsPyfS4Ww0o2i367jZdSSbDQfbS5jgvhbP3mBkKhOgarU1NyfW/VqnTecZzKJMPu\
                    OP2822rhuVjE4ONDvg86Hdzn8/hsNATlCmXcTlwVtR1S+1WPFJ+OjqDXangsFNBtNsXEa5p2INbm\
                    0zyOHpts82R6up56KBSWadIrTazQjzMFGP0t/hFgACMj/LBiwjdaAAAAAElFTkSuQmCC";
+
 /**
  * Adding new method 'startsWith' to the 'String' class.
  */                  
@@ -185,6 +214,10 @@ switch (document.location.host) {
 	case "www.macmillandictionary.com":
 		macmillanInit();
 		break;
+	// 'Pandora'
+	case "www.pandora.com":
+		pandoraInit();
+		break;
 	// Unrecognized site which is not supported by this extension
 	default:
 		fpIsSiteValid = false;
@@ -206,8 +239,11 @@ if (fpIsSiteValid) {
 			}
 			if (fpIsMacmillan) {
 				injectMacmillanAudioLinks();
+			} if (fpIsPandora) {
+				injectPandoraAudioLinks();
+			} else {
+				fpInject();
 			}
-			fpInject();
 			fpLocked = false;
 		});
 }
@@ -570,13 +606,14 @@ function injectVkontakteAudioLinks() {
  * Initializes global variables in case of processing the Twitter page.
  */
 function twitterInit() {
+	fpIsTwitter = true;
 	// try to find the current user identifier
 	var user = $(".js-mini-current-user").first();
 	if (user.length > 0) {
 		fpUserId = user.attr("data-user-id");
 	}
 	// set the selector to find all the posts on the page
-	fpSelector = ".stream .stream-item-header .js-toggle-fav, .stream .expanded-content .js-toggle-fav";
+	fpSelector = ".stream .stream-item-footer .tweet-actions .js-toggle-fav";
 	// build the method to get a URL for sending messages
 	fpGetMessageUrl = function(user) {
 		return "javascript:void()";
@@ -643,4 +680,68 @@ function injectMacmillanAudioLinks() {
 		pronunciation.attr(fpInjectedAttributeName, true);
 	});
 	fpMacmillanAudioLocked = false;
+}
+
+/**
+ * Initializes global variables in case of processing the Pandora page.
+ */
+function pandoraInit() {
+	fpIsPandora = true;
+}
+
+/**
+ * Injects links to download audio from Pandora internet radio web-site.
+ */
+function injectPandoraAudioLinks() {
+	var artist = $(".info .playerBarArtist");
+	var title = $(".info .playerBarSong");
+	if ((artist.length > 0) && (artist.text().length > 0) && (title.length > 0) && (title.text().length > 0)) {
+		var pandora = getPandoraInjectedButton();
+		var trackName = artist.text() + " - " + title.text() + ".m4a";
+		var link = pandora.find("a");
+		if (trackName == link.attr("download")) {
+			return;
+		}
+		link.attr("download", trackName);
+		fpPandoraActionCount++;
+		checkPandoraInjectedButtonStatus();
+	}
+}
+
+/**
+ * Subscribes to Chrome communication port to handle Pandora audio URLs.
+ */
+fpPandoraPort.onMessage.addListener(function(msg) {
+	if (msg.url) {
+		var pandora = getPandoraInjectedButton();
+		var link = pandora.find("a");
+		link.attr("href", msg.url);
+		fpPandoraActionCount++;
+		checkPandoraInjectedButtonStatus();
+	}
+});
+
+/**
+ * Returns Pandora "Download" button (creates it if there is no such a button yet).
+ */
+function getPandoraInjectedButton() {
+	var pandora = $("#" + fpPandoraInjectedElementId);
+	if (pandora.length == 0) {
+		var link = $("<a>");
+		var pandora = $("<div>").attr("id", fpPandoraInjectedElementId);
+		pandora.append(link);
+		pandora.attr("class", "fpPandoraButtonDisabled");
+		pandora.insertAfter($(".skipButton"));
+		$(".buttons").css("width", "260px");
+	}
+	return pandora;
+}
+
+/**
+ * Enables/disables Pandora "Download" button.
+ */
+function checkPandoraInjectedButtonStatus() {
+	var pandora = getPandoraInjectedButton();
+	fpPandoraActionCount %= 3;
+	pandora.attr("class", (fpPandoraActionCount == 0) ? "fpPandoraDownloadButton" : "fpPandoraButtonDisabled");
 }
