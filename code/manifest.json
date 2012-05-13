@@ -1,6 +1,6 @@
 {
 	"name": "Faceplex",
-	"version": "1.0.44",
+	"version": "1.0.45",
 	"description": "__MSG_appDesc__",
 	"default_locale": "en",
 	"icons": {
@@ -9,7 +9,7 @@
 		"128": "images/fp-128.png"
 	},
 	"permissions": [
-		"tabs", "webRequest", "http://*/*", "https://*/*"
+		"tabs", "webRequest", "proxy", "http://*/*", "https://*/*"
 	],
 	"content_scripts": [
 	{
@@ -28,6 +28,6 @@
 		]
 	}],
 	"background": {
-		"scripts": [ "background.js" ]
+		"scripts": [ "jquery-1.7.1.min.js", "background.js" ]
 	}
 }
