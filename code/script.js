@@ -379,7 +379,7 @@ function vkontakteInit() {
 	fpSelector = ".post a.author";
 	// build the method to get a URL for sending messages
 	fpGetMessageUrl = function(userId) {
-		return ("/write" + userId);
+		return ("/im?sel=" + userId);
 	}
 	// build the method to get the user identifier
 	fpGetUserId = function(user) {
