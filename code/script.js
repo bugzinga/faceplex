@@ -25,6 +25,11 @@ fpIsTwitter = false;
 fpIsPandora = false;
 
 /**
+ * Indicates if we are currently in the Oxford Dictionaries context.
+ */
+fpIsOxfordDictionaries = false;
+
+/**
  * Indicates that the elements modification process is running not to run them simultaneously.
  */
 fpLocked = false;
@@ -218,6 +223,10 @@ switch (document.location.host) {
 	case "www.pandora.com":
 		pandoraInit();
 		break;
+	// 'Oxford Dictionaries'
+	case "oxforddictionaries.com":
+		oxfordDictionariesInit();
+		break;
 	// Unrecognized site which is not supported by this extension
 	default:
 		fpIsSiteValid = false;
@@ -241,6 +250,8 @@ if (fpIsSiteValid) {
 				injectMacmillanAudioLinks();
 			} if (fpIsPandora) {
 				injectPandoraAudioLinks();
+			} if (fpIsOxfordDictionaries) {
+				removeOxfordDictionariesAds();
 			} else {
 				fpInject();
 			}
@@ -745,3 +756,26 @@ function checkPandoraInjectedButtonStatus() {
 	fpPandoraActionCount %= 3;
 	pandora.attr("class", (fpPandoraActionCount == 0) ? "fpPandoraDownloadButton" : "fpPandoraButtonDisabled");
 }
+
+/**
+ * Initializes global variables in case of processing the Oxford Dictionaries page.
+ */
+function oxfordDictionariesInit() {
+	fpIsOxfordDictionaries = true;
+}
+
+/**
+ * Removes advertisements on the Oxford Dictionaries web-site.
+ */
+function removeOxfordDictionariesAds() {
+	$("[id*='ad'][id*='Home']").remove();
+	$("[id*='ad'][id*='Entry']").remove();
+	$("[id*='ad'][id*='Spellchecker']").remove();
+	$("[id*='ad'][id*='Content']").remove();		
+	$("[id*='AdColumn']").remove();
+	$("div").filter(function() {
+		return $(this).css('z-index') == '9998';
+	}).remove();
+	$("#columnWrapper").width("1000px");
+	$("#layoutTable").width("100%");
+};
