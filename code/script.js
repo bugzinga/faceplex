@@ -117,10 +117,7 @@ fpPandoraPortName = "Faceplex Pandora Port";
 /**
  * Chrome communication port to communicate with Pandora's tab.
  */
-fpPandoraPort = chrome.extension.connect(
-	{
-		name: fpPandoraPortName
-	});
+fpPandoraPort = null;
 
 /**
  * Injected element name on Pandora web-site.
@@ -130,7 +127,22 @@ fpPandoraInjectedElementId = "fpPandoraDownloadButton";
 /**
  * Pandora action counter, is used to enable/disable "Download" button.
  */
-fpPandoraActionCount = 1;
+fpPandoraActionCount = 0;
+
+/**
+ * The author of the current track playing on Pandora Radio.
+ */
+fpPandoraCurrentTrackArtist = "";
+
+/**
+ * The name of the current track playing on Pandora Radio.
+ */
+fpPandoraCurrentTrackTitle = "";
+
+/**
+ * The URL of the current track to download on Pandora Radio.
+ */
+fpPandoraCurrentTrackURL = "";
 
 /**
  * Base64-encoded icon to show as a button for sending messages.
@@ -196,6 +208,13 @@ String.prototype.startsWith = function(value) {
  */                  
 String.prototype.endsWith = function(value) {
 	return (this.substr(-value.length) == value);
+}
+
+/**
+ * Adding new method 'isEmpty' to the 'String' class.
+ */                  
+String.prototype.isEmpty = function() {
+	return (this.length == 0);
 }
 
 /**
@@ -698,6 +717,10 @@ function injectMacmillanAudioLinks() {
  */
 function pandoraInit() {
 	fpIsPandora = true;
+	fpPandoraPort = chrome.extension.connect(
+		{
+			name: fpPandoraPortName
+		});
 }
 
 /**
@@ -706,15 +729,33 @@ function pandoraInit() {
 function injectPandoraAudioLinks() {
 	var artist = $(".info .playerBarArtist");
 	var title = $(".info .playerBarSong");
-	if ((artist.length > 0) && (artist.text().length > 0) && (title.length > 0) && (title.text().length > 0)) {
+	if ((artist.length > 0) && (title.length > 0)) {
+		var artistName = artist.text();
+		var titleName = title.text();
+		if (artistName.isEmpty() || titleName.isEmpty()) {
+			return;
+		}
+		if (titleName == "audioad") {
+			fpPandoraActionCount = 0;
+			return;
+		}
+		var trackName = artistName + " - " + titleName + ".m4a";
 		var pandora = getPandoraInjectedButton();
-		var trackName = artist.text() + " - " + title.text() + ".m4a";
 		var link = pandora.find("a");
 		if (trackName == link.attr("download")) {
 			return;
 		}
-		link.attr("download", trackName);
-		fpPandoraActionCount++;
+		if (artistName != fpPandoraCurrentTrackArtist) {
+			fpPandoraCurrentTrackArtist = artistName;
+			fpPandoraActionCount++;
+		}
+		if (titleName != fpPandoraCurrentTrackTitle) {
+			fpPandoraCurrentTrackTitle = titleName;
+			fpPandoraActionCount++;
+		}
+		if ((fpPandoraCurrentTrackArtist == artistName) && (fpPandoraCurrentTrackTitle == titleName)) {
+			link.attr("download", trackName);
+		}
 		checkPandoraInjectedButtonStatus();
 	}
 }
@@ -724,9 +765,13 @@ function injectPandoraAudioLinks() {
  */
 fpPandoraPort.onMessage.addListener(function(msg) {
 	if (msg.url) {
+		if (msg.url == fpPandoraCurrentTrackURL) {
+			return;
+		}
+		fpPandoraCurrentTrackURL = msg.url;
 		var pandora = getPandoraInjectedButton();
 		var link = pandora.find("a");
-		link.attr("href", msg.url);
+		link.attr("href", fpPandoraCurrentTrackURL);
 		fpPandoraActionCount++;
 		checkPandoraInjectedButtonStatus();
 	}
