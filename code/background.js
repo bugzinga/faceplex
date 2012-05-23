@@ -10,9 +10,10 @@ $(document).ready(function($) {
 				pacScript: {
 				data: "function FindProxyForURL(url, host) {\n" +
 					  "  var proxies = [\n" +
-					  "    '72.64.146.136:43',\n" +
-					  "    '173.242.113.130:8888',\n" +
-					  "    '208.73.211.108:80'\n" +
+					  "    '75.64.89.242:36081',\n" +
+					  "    '70.89.83.99:3128',\n" +
+					  "    '64.132.153.78:8080',\n" + 
+					  "    '68.71.76.242:8082'\n" + 
 					  "  ];\n" +
 					  "  var number = Math.floor((Math.random() * proxies.length));\n" +
 					  "  var proxy = proxies[number];\n" +
