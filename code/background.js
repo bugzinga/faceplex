@@ -3,40 +3,20 @@
  * Changing Proxy to get access to Pandora Radio outside the USA.
  */
 $(document).ready(function($) {
-	jQuery.getScript('http://www.geoplugin.net/javascript.gp', function() {
-		if (geoplugin_countryCode() != "US") {
-			var config = {
-				mode: "pac_script",
-				pacScript: {
-				data: "function FindProxyForURL(url, host) {\n" +
-					  "  var proxies = [\n" +
-					  "    '68.71.76.242:8082',\n" +
-					  "    '72.64.146.135:8080',\n" +
-					  "    '72.64.146.136:8080',\n" +
-					  "    '62.102.152.25:8080',\n" +
-					  "    '62.102.152.25:8080',\n" +
-					  "    '209.160.64.92:3128',\n" +
- 					  "    '173.236.204.117:8080'\n" +
-					  "  ];\n" +
-					  "  var number = Math.floor((Math.random() * proxies.length));\n" +
-					  "  var proxy = proxies[number];\n" +
-				      "  if (shExpMatch(url, 'http*://www.pandora.com/*')) {\n" + 
-				      "    return 'PROXY ' + proxy + ';'\n" +
-				      "  }\n" +
-				      "  return 'DIRECT';\n" +
-				      "}"
+		$.getScript('http://www.geoplugin.net/javascript.gp', function() {
+				if (geoplugin_countryCode() != "US") {
+					fixPandoraConnection();
+					chrome.webRequest.onBeforeRequest.addListener(
+						function(details) {
+							fixPandoraConnection();
+						},
+						{
+							urls: ["*://*.pandora.com/*"],
+							types: [ "main_frame" ]
+						});
 				}
-			};
-			chrome.proxy.settings.set(
-				{
-					value: config,
-					scope: 'regular'
-				},
-				function() {}
-			);	
-		}
+			})
 	});
-});
 
 /**
  * Chrome communication port name to communicate with Pandora's tab.
@@ -80,3 +60,57 @@ chrome.extension.onConnect.addListener(function(port) {
 			});
 		}
 	});
+
+/**
+ * Fixes Pandora's restriction of usage only from the USA.
+ * Looks for anonymous proxies and applies them if the user tries to get Pandora.
+ */
+function fixPandoraConnection() {
+	$.ajax(
+		"http://hidemyass.com/proxy-list/",
+		{
+			async  : true,
+			type   : "POST",
+			data   : {
+				         c      : [ "United States" ],
+				         pr     : [ 0, 1 ],
+				         a      : [ 3, 4 ],
+				         sp     : [ 3 ],
+				         ct     : [ 3 ],
+				         s      : 0,
+				         o      : 0,
+				         pp     : 2,
+				         sortBy : "date"
+				     },
+			complete : function(jqXHR, textStatus) {
+				           var proxies = [];
+				           $.each($(jqXHR.responseText).find("#listtable tbody tr"), function(indexInArray, valueOfElement) {
+						           var ipAddress = $(valueOfElement).find("td")[1];
+						           var ipPort = $(valueOfElement).find("td")[2];
+						           var proxy = $(ipAddress).children("span").contents().filter(function() { return ($(this).css("display") != "none"); }).text() + ":" + $(ipPort).text().trim();
+						           proxies.push("'" + proxy + "'");
+					           });
+	           				var config = {
+								mode: "pac_script",
+								pacScript: {
+									data: "function FindProxyForURL(url, host) {\n" +
+										  "    var proxies = [ " + proxies + " ];\n" +
+										  "    var number = Math.floor((Math.random() * proxies.length));\n" +
+										  "    var proxy = proxies[number];\n" +
+									      "    if (shExpMatch(url, 'http*://www.pandora.com/*')) {\n" + 
+									      "        return 'PROXY ' + proxy + ';'\n" +
+									      "    }\n" +
+									      "    return 'DIRECT';\n" +
+									      "}"
+								}
+							};
+							chrome.proxy.settings.set(
+								{
+									value: config,
+									scope: "regular"
+								},
+								function() {}
+							);
+				       }
+		});
+}
