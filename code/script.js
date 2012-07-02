@@ -197,27 +197,6 @@ fpDownloadImage = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAALCAYAAACgR9dcAAAAGXRFWHRTb2Z0d
                    0zyOHpts82R6up56KBSWadIrTazQjzMFGP0t/hFgACMj/LBiwjdaAAAAAElFTkSuQmCC";
 
 /**
- * Adding new method 'startsWith' to the 'String' class.
- */                  
-String.prototype.startsWith = function(value) {
-	return (this.indexOf(value) == 0);
-}
-
-/**
- * Adding new method 'endsWith' to the 'String' class.
- */                  
-String.prototype.endsWith = function(value) {
-	return (this.substr(-value.length) == value);
-}
-
-/**
- * Adding new method 'isEmpty' to the 'String' class.
- */                  
-String.prototype.isEmpty = function() {
-	return (this.length == 0);
-}
-
-/**
  * Initializing global variables regarding the site that has been opened.
  */
 switch (document.location.host) {

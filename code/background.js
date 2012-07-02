@@ -8,7 +8,35 @@ $(document).ready(function($) {
 					fixPandoraConnection();
 					chrome.webRequest.onBeforeRequest.addListener(
 						function(details) {
-							fixPandoraConnection();
+							// TODO: Probably the logic should be changed to have something here as well
+						},
+						{
+							urls: ["*://*.pandora.com/*"],
+							types: [ "main_frame" ]
+						});
+					chrome.webRequest.onCompleted.addListener(
+						function(details) {
+							if (details.statusCode != 200) {
+								fixPandoraConnection(false);
+							}
+						},
+						{
+							urls: ["*://*.pandora.com/*"],
+							types: [ "main_frame" ]
+						});
+					chrome.webRequest.onErrorOccurred.addListener(
+						function(details) {
+							fixPandoraConnection(false);
+						},
+						{
+							urls: ["*://*.pandora.com/*"],
+							types: [ "main_frame" ]
+						});
+					chrome.webRequest.onBeforeRedirect.addListener(
+						function(details) {
+							if (details.redirectUrl.endsWith("restricted")) {
+								fixPandoraConnection(false);
+							}
 						},
 						{
 							urls: ["*://*.pandora.com/*"],
@@ -65,11 +93,11 @@ chrome.extension.onConnect.addListener(function(port) {
  * Fixes Pandora's restriction of usage only from the USA.
  * Looks for anonymous proxies and applies them if the user tries to get Pandora.
  */
-function fixPandoraConnection() {
+function fixPandoraConnection(async) {
 	$.ajax(
 		"http://hidemyass.com/proxy-list/",
 		{
-			async  : true,
+			async  : (async == undefined) ? true : async,
 			type   : "POST",
 			data   : {
 				         c      : [ "United States" ],
@@ -90,13 +118,13 @@ function fixPandoraConnection() {
 						           var proxy = $(ipAddress).children("span").contents().filter(function() { return ($(this).css("display") != "none"); }).text() + ":" + $(ipPort).text().trim();
 						           proxies.push("'" + proxy + "'");
 					           });
+					        var number = Math.floor((Math.random() * proxies.length));
+					        var proxy = proxies[number];
 	           				var config = {
 								mode: "pac_script",
 								pacScript: {
 									data: "function FindProxyForURL(url, host) {\n" +
-										  "    var proxies = [ " + proxies + " ];\n" +
-										  "    var number = Math.floor((Math.random() * proxies.length));\n" +
-										  "    var proxy = proxies[number];\n" +
+										  "    var proxy = [ " + proxy + " ];\n" +
 									      "    if (shExpMatch(url, 'http*://www.pandora.com/*')) {\n" + 
 									      "        return 'PROXY ' + proxy + ';'\n" +
 									      "    }\n" +

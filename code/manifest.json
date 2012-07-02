@@ -1,6 +1,6 @@
 {
 	"name": "Faceplex",
-	"version": "1.0.52",
+	"version": "1.0.53",
 	"description": "__MSG_appDesc__",
 	"default_locale": "en",
 	"icons": {
@@ -21,13 +21,13 @@
 			"http://www.pandora.com/*", "http://oxforddictionaries.com/*"
 		],
 		"js": [
-			"jquery-1.7.1.min.js", "script.js"
+			"jquery-1.7.1.min.js", "utils.js", "script.js"
 		],
 		"css": [
 			"styles.css"
 		]
 	}],
 	"background": {
-		"scripts": [ "jquery-1.7.1.min.js", "background.js" ]
+		"scripts": [ "jquery-1.7.1.min.js", "utils.js", "background.js" ]
 	}
 }
