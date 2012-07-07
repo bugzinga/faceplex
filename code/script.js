@@ -800,6 +800,5 @@ function removeOxfordDictionariesAds() {
 	$("div").filter(function() {
 		return $(this).css('z-index') == '9998';
 	}).remove();
-	$("#columnWrapper").width("1000px");
 	$("#layoutTable").width("100%");
 };
