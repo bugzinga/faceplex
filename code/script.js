@@ -248,6 +248,7 @@ if (fpIsSiteValid) {
 				injectMacmillanAudioLinks();
 			} if (fpIsPandora) {
 				injectPandoraAudioLinks();
+				removePandoraAds();
 			} if (fpIsOxfordDictionaries) {
 				removeOxfordDictionariesAds();
 			} else {
@@ -700,6 +701,14 @@ function pandoraInit() {
 		{
 			name: fpPandoraPortName
 		});
+}
+
+/**
+ * Removes advertisements on Pardora web-site.
+ */
+function removePandoraAds() {
+	$("#ad_container").remove();
+	$("#adLayout").width($("#mainContentContainer").width());
 }
 
 /**
