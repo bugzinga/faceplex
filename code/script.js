@@ -243,13 +243,15 @@ if (fpIsSiteValid) {
 			if (fpIsVkontakte) {
 				injectVkontakteVideoLinks();
 				injectVkontakteAudioLinks();
-			}
-			if (fpIsMacmillan) {
+				removeVkontakteAds();
+			} else if (fpIsFacebook) {
+				removeFacebookAds();
+			} else if (fpIsMacmillan) {
 				injectMacmillanAudioLinks();
-			} if (fpIsPandora) {
+			} else if (fpIsPandora) {
 				injectPandoraAudioLinks();
 				removePandoraAds();
-			} if (fpIsOxfordDictionaries) {
+			} else if (fpIsOxfordDictionaries) {
 				removeOxfordDictionariesAds();
 			} else {
 				fpInject();
@@ -366,6 +368,19 @@ function facebookInit() {
 			}
 		}
 	}
+}
+
+/**
+ * Removes advertisements on Facebook web-site.
+ */
+function removeFacebookAds() {
+	$(".ego_column .ego_section").each(function(index, element) {
+			if ($(element).find(".adsCategoryTitleLink").length > 0) {
+				$(this).remove();
+			}
+		})
+	$(".fbAdUnit").remove();
+	$(".mtl").remove();
 }
 
 /**
@@ -613,6 +628,13 @@ function injectVkontakteAudioLinks() {
 }
 
 /**
+ * Removes advertisements on Vkontakte web-site.
+ */
+function removeVkontakteAds() {
+	$("#left_ads").css("display", "none");
+}
+
+/**
  * Initializes global variables in case of processing the Twitter page.
  */
 function twitterInit() {
@@ -751,19 +773,21 @@ function injectPandoraAudioLinks() {
 /**
  * Subscribes to Chrome communication port to handle Pandora audio URLs.
  */
-fpPandoraPort.onMessage.addListener(function(msg) {
-	if (msg.url) {
-		if (msg.url == fpPandoraCurrentTrackURL) {
-			return;
+if (fpPandoraPort) {
+	fpPandoraPort.onMessage.addListener(function(msg) {
+		if (msg.url) {
+			if (msg.url == fpPandoraCurrentTrackURL) {
+				return;
+			}
+			fpPandoraCurrentTrackURL = msg.url;
+			var pandora = getPandoraInjectedButton();
+			var link = pandora.find("a");
+			link.attr("href", fpPandoraCurrentTrackURL);
+			fpPandoraActionCount++;
+			checkPandoraInjectedButtonStatus();
 		}
-		fpPandoraCurrentTrackURL = msg.url;
-		var pandora = getPandoraInjectedButton();
-		var link = pandora.find("a");
-		link.attr("href", fpPandoraCurrentTrackURL);
-		fpPandoraActionCount++;
-		checkPandoraInjectedButtonStatus();
-	}
-});
+	});
+}
 
 /**
  * Returns Pandora "Download" button (creates it if there is no such a button yet).
@@ -806,6 +830,9 @@ function removeOxfordDictionariesAds() {
 	$("[id*='ad'][id*='Spellchecker']").remove();
 	$("[id*='ad'][id*='Content']").remove();		
 	$("[id*='AdColumn']").remove();
+	$("#LeftAd").remove();
+	$("#TopAd").remove();
+	$("#RightAd").remove();
 	$("div").filter(function() {
 		return $(this).css('z-index') == '9998';
 	}).remove();
