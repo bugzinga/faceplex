@@ -113,11 +113,29 @@ function fixPandoraConnection(async) {
 			complete : function(jqXHR, textStatus) {
 				           var proxies = [];
 				           $.each($(jqXHR.responseText).find("#listtable tbody tr"), function(indexInArray, valueOfElement) {
-						           var ipAddress = $(valueOfElement).find("td")[1];
-						           var ipPort = $(valueOfElement).find("td")[2];
-						           var proxy = $(ipAddress).children("span").contents().filter(function() { return ($(this).css("display") != "none"); }).text() + ":" + $(ipPort).text().trim();
-						           proxies.push("'" + proxy + "'");
-					           });
+								    var ipAddress = $(valueOfElement).find("td")[1];
+								    var ipPort = $(valueOfElement).find("td")[2];
+								    var visibleClasses = [];
+								    var proxy = $(ipAddress).children("span").contents().filter(function() {
+										    var nodeName = this.nodeName.toLowerCase();
+										    if (nodeName == "style") {
+											    var styles = $(this).text().trim();
+											    visibleClasses = styles.match(/((?=.)(\w*)(?={display:i))/g).filter(function(value) { return !value.isEmpty(); });
+											    return false;
+										    }
+										    var elementClass = $(this).attr("class");
+										    var classMatch = false;
+										    if (elementClass != undefined) {
+											    $.each(visibleClasses, function(indexInArray, valueOfElement) {
+													    classMatch = elementClass.contains(valueOfElement);
+													    return !classMatch;
+												    });
+										    }
+										    return (nodeName == "#text") || classMatch || ($(this).css("display") == "inline")
+											    || !isNaN(parseInt(elementClass)) || ($(this).text() == ".");
+									    }).text() + ":" + $(ipPort).text().trim();
+								    proxies.push("'" + proxy + "'");
+					            });
 					        var number = Math.floor((Math.random() * proxies.length));
 					        var proxy = proxies[number];
 	           				var config = {

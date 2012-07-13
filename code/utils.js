@@ -19,3 +19,10 @@ String.prototype.endsWith = function(value) {
 String.prototype.isEmpty = function() {
 	return (this.length == 0);
 }
+
+/**
+ * Adding new method 'contains' to the 'String' class.
+ */                  
+String.prototype.contains = function(value) {
+	return (this.indexOf(value) != -1);
+}
