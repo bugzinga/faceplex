@@ -253,7 +253,8 @@ if (fpIsSiteValid) {
 				removePandoraAds();
 			} else if (fpIsOxfordDictionaries) {
 				removeOxfordDictionariesAds();
-			} else {
+			}
+			if (fpIsVkontakte || fpIsFacebook) {
 				fpInject();
 			}
 			fpLocked = false;
@@ -318,7 +319,7 @@ function facebookInit() {
 		}
 	}
 	// set the selector to find all the posts on the page
-	fpSelector = ".storyContent a[data-hovercard*='user']:not('.actorPic')";
+	fpSelector = ".storyContent a[data-hovercard*='user']:not('.actorPic'), .commentContent a[data-hovercard*='user']:not('.actorPic'), .UIImageBlock_Content a[data-hovercard*='user']:not('.actorPic')";
 	// build the method to get a URL for sending messages
 	fpGetMessageUrl = function(userId) {
 		return ("/messages/" + userId);
