@@ -254,9 +254,7 @@ if (fpIsSiteValid) {
 			} else if (fpIsOxfordDictionaries) {
 				removeOxfordDictionariesAds();
 			}
-			if (fpIsVkontakte || fpIsFacebook) {
-				fpInject();
-			}
+			fpInject();
 			fpLocked = false;
 		});
 }
