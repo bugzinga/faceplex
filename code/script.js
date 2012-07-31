@@ -610,7 +610,7 @@ function injectVkontakteAudioLinks() {
 			? audioValue.length
 			: urlEndPosition;
 		var url = audioValue.substring(0, urlEndPosition);
-		var audioTitle = audio.closest("tr").find(".title_wrap b, .audio_title_wrap b");
+		var audioTitle = audio.closest(".audio").find(".title_wrap b, .audio_title_wrap b");
 		var link = $("<a>").css("margin", "2px").attr("href", url);
 		if (url.endsWith(".mp3")) {
 			var audioTitleName = audioTitle.siblings(".title").find("a");
