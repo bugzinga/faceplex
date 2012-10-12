@@ -379,7 +379,7 @@ function removeFacebookAds() {
 			}
 		})
 	$(".fbAdUnit").remove();
-	$(".mtl").remove();
+	$("#pagelet_rhc_footer").remove();
 }
 
 /**

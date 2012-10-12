@@ -3,8 +3,8 @@
  * Changing Proxy to get access to Pandora Radio outside the USA.
  */
 $(document).ready(function($) {
-		$.getScript('http://www.geoplugin.net/javascript.gp', function() {
-				if (geoplugin_countryCode() != "US") {
+		$.getJSON('http://www.geoplugin.net/json.gp?native=1', function(data) {
+				if (data["geoplugin_countryCode"] != "US") {
 					fixPandoraConnection();
 					chrome.webRequest.onBeforeRequest.addListener(
 						function(details) {
