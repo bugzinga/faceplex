@@ -69,7 +69,7 @@ chrome.webRequest.onHeadersReceived.addListener(
 			});
 	},
 	{
-		urls: ["*://*.pandora.com/access*"],
+		urls: [ "*://*.pandora.com/access*", "*://*.p-cdn.com/access*" ],
 		types: [ "object" ]
 	}
 );

@@ -617,6 +617,8 @@ function injectVkontakteAudioLinks() {
 			if (audioTitleName) {
 				link.attr("download", audioTitle.text() + " - " + audioTitleName.text() + ".mp3");
 			}
+		} else {
+			return;
 		}
 		var image = $("<img>").attr("src", "data:image/png;base64," + fpDownloadImage);
 		link.append(image);
@@ -744,7 +746,7 @@ function injectPandoraAudioLinks() {
 		if (artistName.isEmpty() || titleName.isEmpty()) {
 			return;
 		}
-		if (titleName == "audioad") {
+		if ((titleName == "audioad") || (titleName == "ad")) {
 			fpPandoraActionCount = 0;
 			return;
 		}
