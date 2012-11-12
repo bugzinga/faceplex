@@ -567,9 +567,9 @@ function injectVkontakteVideoLinks() {
 				var url = "http://";
 				// whether or not there is an identifier of a user who posted the video
 				if (params.uid != 0) {
-					url += "cs" + params.host + "." + location.hostname + "/u" + params.uid + "/video/" + params.vtag;
+					url += "cs" + params.host + "." + location.hostname + "/u" + params.uid + "/videos/" + params.vtag;
 				} else {
-					url += params.host + "/assets/videos/" + params.vtag + params.vkid;
+					url += params.host + "/assets/video/" + params.vtag + params.vkid;
 				}
 				// try to find out the best resolution of the video
 				var resolution = fpVkResolutionMap[params.hd];
