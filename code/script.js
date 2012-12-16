@@ -538,11 +538,14 @@ function injectVkontakteVideoLinks() {
 									for (var i = 0; i <= urls.length; i++) {
 										var url = urls[i].replace("\\u0026", "&");
 										var params = url.split(separators[1]);
+										var actualUrl = "";
 										for (var k = 0; k <= params.length; k++) {
 											param = params[k].split(separators[2]);
 											if ((param.length == 2) && (param[0] == "url")) {
-												var actualUrl = unescape(unescape(param[1]));
-												var title = encodeURI(video.text());
+												actualUrl = unescape(unescape(param[1]));
+											} else if ((param.length == 2) && (param[0] == "sig")) {
+												actualUrl += "&signature=" + param[1];
+												var title = encodeURI(video.find(".video_raw_info_name").text());
 												actualUrl += "&title=" + title;
 												injectVideoLink(actualUrl);
 												return;
