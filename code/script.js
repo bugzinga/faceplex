@@ -476,7 +476,7 @@ function vkontakteFindUserId() {
  * Templates are just a logical assumption how it works and matches.
  */
 function injectVkontakteVideoLinks() {
-	$.each($(".video_info_cont a.video_name, .results.video_results .title a").not("[" + fpInjectedAttributeName + "]"), function(indexInArray, valueOfElement) {
+	$.each($("#video_rows .video_row_cont a.video_row_relative, #video_search_rows .video_row_cont a.video_row_relative").not("[" + fpInjectedAttributeName + "]"), function(indexInArray, valueOfElement) {
 		var video = $(valueOfElement);
 		var videoUrl = video.attr("href");
 		// we assume that the video ling should look like "/video${videoId}?${params}",
@@ -501,11 +501,12 @@ function injectVkontakteVideoLinks() {
 		var requestData = "act=show&al=1&autoplay=1&list&module=video&video=" + videoId;
 		// inject download image with a specified link into the page
 		function injectVideoLink(url) {
-			var link = $("<a>").css("margin", "2px").attr("href", url);
+			video.find(".video_row_duration").css("right", "26px");
+			var link = $("<a>").css("margin", "2px").attr("href", url).css("position", "relative").css("left", video.width() - 25).css("top", "-20px");
 			if (url.endsWith(".mp4") || url.endsWith(".flv")) {
-				link.attr("download", video.text() + url.substr(-4));
+				link.attr("download", video.find(".video_raw_info_name").text() + url.substr(-4));
 			}
-			var image = $("<img>").attr("src", "data:image/png;base64," + fpDownloadImage);
+			var image = $("<img>").attr("src", "data:image/png;base64," + fpDownloadImage).css("width", "20px");
 			link.append(image);
 			link.insertAfter(video);
 			video.attr(fpInjectedAttributeName, true);
