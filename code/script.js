@@ -244,6 +244,7 @@ if (fpIsSiteValid) {
 				injectVkontakteVideoLinks();
 				injectVkontakteAudioLinks();
 				removeVkontakteAds();
+				removeVkontaktePronouns();
 			} else if (fpIsFacebook) {
 				removeFacebookAds();
 			} else if (fpIsMacmillan) {
@@ -383,6 +384,21 @@ function removeFacebookAds() {
 }
 
 /**
+ * Removes annoying possessive pronouns ('My', 'Мой', 'Моя', 'Мое', 'Мои')
+ * from the Vkontakte main menu...
+ */
+function removeVkontaktePronouns() {
+	$.each($("#side_bar li *"), function(indexInArray, valueOfElement) {
+			$value = $(valueOfElement).html();
+			if ($value.startsWith("Мой") || $value.startsWith("Моя") || $value.startsWith("Мое") || $value.startsWith("Мои")) {
+				$(valueOfElement).html($value.substring(4));
+			} else if ($value.startsWith("My")) {
+				$(valueOfElement).html($value.substring(3));
+			}
+		});
+}
+
+/**
  * Initializes global variables in case of processing the VKontakte page.
  */
 function vkontakteInit() {
@@ -435,15 +451,6 @@ function vkontakteInit() {
 			return userId;
 		}
 	}
-	// remove the annoying possessive pronouns ('My', 'Мой', 'Моя', 'Мое', 'Мои') from the main menu...
-	$.each($("#side_bar li *"), function(indexInArray, valueOfElement) {
-			$value = $(valueOfElement).html();
-			if ($value.startsWith("Мой") || $value.startsWith("Моя") || $value.startsWith("Мое") || $value.startsWith("Мои")) {
-				$(valueOfElement).html($value.substring(4));
-			} else if ($value.startsWith("My")) {
-				$(valueOfElement).html($value.substring(3));
-			}
-		});
 }
 
 /**
