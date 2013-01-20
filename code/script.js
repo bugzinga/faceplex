@@ -35,6 +35,11 @@ fpIsOxfordDictionaries = false;
 fpIsGMail = false;
 
 /**
+ * Indicates if we are currently in the YouTube context.
+ */
+fpIsYouTube = false;
+
+/**
  * Indicates that the elements modification process is running not to run them simultaneously.
  */
 fpLocked = false;
@@ -234,6 +239,10 @@ switch (document.location.host) {
 	case "mail.google.com":
 		gMailInit();
 		break;
+	// 'YouTube'
+	case "www.youtube.com":
+		youTubeInit();
+		break;
 	// Unrecognized site which is not supported by this extension
 	default:
 		fpIsSiteValid = false;
@@ -265,6 +274,8 @@ if (fpIsSiteValid) {
 				removeOxfordDictionariesAds();
 			} else if (fpIsGMail) {
 				removeGMailAds();
+			} else if (fpIsYouTube) {
+				removeYouTubeAds();
 			}
 			fpInject();
 			fpLocked = false;
@@ -892,4 +903,15 @@ function removeGMailAds() {
 	$("html head").append(style);
 	style = $("<style>.adC .nH .u5 { display: none; }</style>");
 	$("html head").append(style);
+};
+
+function youTubeInit() {
+	fpIsYouTube = true;
+}
+
+/**
+ * Removes advertisements on the YouTube web-site.
+ */
+function removeYouTubeAds() {
+	$(".promoted-videos").remove();
 };
