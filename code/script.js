@@ -30,6 +30,11 @@ fpIsPandora = false;
 fpIsOxfordDictionaries = false;
 
 /**
+ * Indicates if we are currently in the Google Mail context.
+ */
+fpIsGMail = false;
+
+/**
  * Indicates that the elements modification process is running not to run them simultaneously.
  */
 fpLocked = false;
@@ -225,6 +230,10 @@ switch (document.location.host) {
 	case "oxforddictionaries.com":
 		oxfordDictionariesInit();
 		break;
+	// 'Google Mail'
+	case "mail.google.com":
+		gMailInit();
+		break;
 	// Unrecognized site which is not supported by this extension
 	default:
 		fpIsSiteValid = false;
@@ -254,6 +263,8 @@ if (fpIsSiteValid) {
 				removePandoraAds();
 			} else if (fpIsOxfordDictionaries) {
 				removeOxfordDictionariesAds();
+			} else if (fpIsGMail) {
+				removeGMailAds();
 			}
 			fpInject();
 			fpLocked = false;
@@ -864,4 +875,21 @@ function removeOxfordDictionariesAds() {
 		$("#columnWrapper").width("1000px");
 	}
 	$("#layoutTable").width("100%");
+};
+
+/**
+ * Initializes global variables in case of processing the Google Mail page.
+ */
+function gMailInit() {
+	fpIsGMail = true;
+}
+
+/**
+ * Removes advertisements on the Google Mail web-site.
+ */
+function removeGMailAds() {
+	var style = $("<style>.mq { display: none; }</style>");
+	$("html head").append(style);
+	style = $("<style>.adC .nH .u5 { display: none; }</style>");
+	$("html head").append(style);
 };
