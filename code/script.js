@@ -25,6 +25,11 @@ fpIsTwitter = false;
 fpIsPandora = false;
 
 /**
+ * Indicates if we are currently in the TuneIn context.
+ */
+fpIsTuneIn = false;
+
+/**
  * Indicates if we are currently in the Oxford Dictionaries context.
  */
 fpIsOxfordDictionaries = false;
@@ -231,6 +236,10 @@ switch (document.location.host) {
 	case "www.pandora.com":
 		pandoraInit();
 		break;
+	// 'TuneIn'
+	case "tunein.com":
+		tuneInInit();
+		break;
 	// 'Oxford Dictionaries'
 	case "oxforddictionaries.com":
 		oxfordDictionariesInit();
@@ -270,6 +279,8 @@ if (fpIsSiteValid) {
 			} else if (fpIsPandora) {
 				injectPandoraAudioLinks();
 				removePandoraAds();
+			} else if (fpIsTuneIn) {
+				removeTuneInAds();
 			} else if (fpIsOxfordDictionaries) {
 				removeOxfordDictionariesAds();
 			} else if (fpIsGMail) {
@@ -858,6 +869,21 @@ function checkPandoraInjectedButtonStatus() {
 	var pandora = getPandoraInjectedButton();
 	fpPandoraActionCount %= 3;
 	pandora.attr("class", (fpPandoraActionCount == 0) ? "fpPandoraDownloadButton" : "fpPandoraButtonDisabled");
+}
+
+/**
+ * Initializes global variables in case of processing the TuneIn page.
+ */
+function tuneInInit() {
+	fpIsTuneIn = true;
+}
+
+/**
+ * Removes advertisements on TuneIn web-site.
+ */
+function removeTuneInAds() {
+	$(".leader_ad").remove();
+	$(".outside_ad").remove();
 }
 
 /**
