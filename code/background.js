@@ -70,7 +70,7 @@ chrome.webRequest.onHeadersReceived.addListener(
 	},
 	{
 		urls: [ "*://*.pandora.com/access*", "*://*.p-cdn.com/access*" ],
-		types: [ "object" ]
+		types: [ "xmlhttprequest", "object", "other" ]
 	}
 );
 
