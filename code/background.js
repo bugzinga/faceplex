@@ -1,10 +1,15 @@
 
+function log(message) {
+	console.log("[Faceplex] " + message);
+}
+
 /**
  * Changing Proxy to get access to Pandora Radio outside the USA.
  */
 $(document).ready(function($) {
 		$.getJSON('http://www.geoplugin.net/json.gp?native=1', function(data) {
-				if (data["geoplugin_countryCode"] != "US") {
+				var countryCode = data["geoplugin_countryCode"];
+				if ($.inArray(countryCode, [ "US", "AU", "NZ" ]) == -1) {
 					fixPandoraConnection();
 					chrome.webRequest.onBeforeRequest.addListener(
 						function(details) {
