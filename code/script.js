@@ -912,6 +912,8 @@ function removeOxfordDictionariesAds() {
 		$("#columnWrapper").width("1000px");
 	}
 	$("#layoutTable").width("100%");
+	$('.responsive_left_column_placement').removeClass('responsive_left_column_placement');
+	$('.responsive_right_column_placement').removeClass('responsive_right_column_placement');
 };
 
 /**
