@@ -914,6 +914,13 @@ function removeOxfordDictionariesAds() {
 	$("#layoutTable").width("100%");
 	$('.responsive_left_column_placement').removeClass('responsive_left_column_placement');
 	$('.responsive_right_column_placement').removeClass('responsive_right_column_placement');
+	var leftCell = $('.responsive_cell_left');
+	if (leftCell.text().trim().length == 0) {
+		var leftCellWidth = leftCell.width();
+		leftCell.remove();
+		var centerCell = $('.responsive_cell_center');
+		centerCell.width(centerCell.width() + leftCellWidth);
+	}
 };
 
 /**
