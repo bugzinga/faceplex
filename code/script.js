@@ -242,6 +242,7 @@ switch (document.location.host) {
 		break;
 	// 'Oxford Dictionaries'
 	case "oxforddictionaries.com":
+	case "www.oxforddictionaries.com":
 		oxfordDictionariesInit();
 		break;
 	// 'Google Mail'
@@ -915,6 +916,7 @@ function removeOxfordDictionariesAds() {
 	$("#layoutTable").width("100%");
 	$('.responsive_left_column_placement').removeClass('responsive_left_column_placement');
 	$('.responsive_right_column_placement').removeClass('responsive_right_column_placement');
+	$("[id*='google_ads']").remove();
 	var leftCell = $('.responsive_cell_left');
 	if (leftCell.text().trim().length == 0) {
 		var leftCellWidth = leftCell.width();
@@ -950,4 +952,5 @@ function youTubeInit() {
  */
 function removeYouTubeAds() {
 	$(".promoted-videos").remove();
+	$("[id*='ad_creative']").remove();
 };

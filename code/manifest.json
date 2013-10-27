@@ -1,6 +1,6 @@
 {
 	"name": "Faceplex",
-	"version": "1.0.81",
+	"version": "1.0.82",
 	"description": "__MSG_appDesc__",
 	"default_locale": "en",
 	"icons": {
@@ -19,7 +19,8 @@
 			"http://www.macmillandictionary.com/*",
 			"http://www.pandora.com/*",
 			"http://tunein.com/*",
-			"http://oxforddictionaries.com/*"
+			"http://oxforddictionaries.com/*", "http://www.oxforddictionaries.com/*",
+			"http://www.youtube.com/*"
 		],
 		"js": [
 			"jquery-1.7.1.min.js", "utils.js", "script.js"
