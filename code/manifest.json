@@ -1,6 +1,6 @@
 {
 	"name": "Faceplex",
-	"version": "1.0.82",
+	"version": "1.0.83",
 	"description": "__MSG_appDesc__",
 	"default_locale": "en",
 	"icons": {
@@ -18,7 +18,7 @@
 			"http://vk.com/*", "http://vkontakte.ru/*", "https://vk.com/*", "https://vkontakte.ru/*",
 			"http://www.macmillandictionary.com/*",
 			"http://www.pandora.com/*",
-			"http://tunein.com/*",
+			"http://tunein.com/*", "http://127.0.0.1/*",
 			"http://oxforddictionaries.com/*", "http://www.oxforddictionaries.com/*",
 			"http://www.youtube.com/*"
 		],

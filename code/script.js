@@ -238,6 +238,7 @@ switch (document.location.host) {
 		break;
 	// 'TuneIn'
 	case "tunein.com":
+	case "127.0.0.1":
 		tuneInInit();
 		break;
 	// 'Oxford Dictionaries'
@@ -884,7 +885,7 @@ function tuneInInit() {
  * Removes advertisements on TuneIn web-site.
  */
 function removeTuneInAds() {
-	$(".leader_ad").remove();
+	$("#leader_ad_container").remove();
 	$(".outside_ad").remove();
 }
 
