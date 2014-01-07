@@ -238,6 +238,7 @@ switch (document.location.host) {
 		break;
 	// 'TuneIn'
 	case "tunein.com":
+	case "localhost":
 	case "127.0.0.1":
 		tuneInInit();
 		break;
@@ -885,6 +886,7 @@ function tuneInInit() {
  * Removes advertisements on TuneIn web-site.
  */
 function removeTuneInAds() {
+	$(".ad-block").remove();
 	$("#leader_ad_container").remove();
 	$(".outside_ad").remove();
 }
