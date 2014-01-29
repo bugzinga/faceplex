@@ -1,6 +1,6 @@
 {
 	"name": "Faceplex",
-	"version": "1.0.84",
+	"version": "1.0.85",
 	"description": "__MSG_appDesc__",
 	"default_locale": "en",
 	"icons": {
@@ -14,7 +14,6 @@
 	"content_scripts": [
 	{
 		"matches": [
-			"http://www.facebook.com/*", "https://www.facebook.com/*",
 			"http://vk.com/*", "http://vkontakte.ru/*", "https://vk.com/*", "https://vkontakte.ru/*",
 			"http://www.macmillandictionary.com/*",
 			"http://www.pandora.com/*",
