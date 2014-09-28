@@ -861,7 +861,7 @@ function getPandoraInjectedButton() {
 		pandora.append(link);
 		pandora.attr("class", "fpPandoraButtonDisabled");
 		pandora.insertAfter($(".skipButton"));
-		$(".buttons").css("width", "260px");
+		$(".buttons").css("width", "360px");
 	}
 	return pandora;
 }
